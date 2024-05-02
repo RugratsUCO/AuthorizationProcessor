@@ -3,6 +3,7 @@ package com.authorizationprocessor.authorizationprocessor.service.estructura;
 import com.authorizationprocessor.authorizationprocessor.domain.estructura.Estructura;
 import com.authorizationprocessor.authorizationprocessor.repository.estructura.EstructuraRepository;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilBoolean;
+import com.authorizationprocessor.authorizationprocessor.utils.UtilObject;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilUUID;
 import com.authorizationprocessor.authorizationprocessor.utils.exception.AuthorizationServiceException;
 import com.authorizationprocessor.authorizationprocessor.utils.messages.UtilMessagesService;
@@ -30,8 +31,8 @@ public final class EstructuraService {
         repository.save(estructura);
     }
 
-    public void cambiarNombre(UUID identificador, Estructura nuevaEstructuraNombre) {
-        Optional<Estructura> estructuraOptional = repository.findById(identificador);
+    public void cambiarNombre(Estructura nuevaEstructuraNombre) {
+        Optional<Estructura> estructuraOptional = repository.findById(nuevaEstructuraNombre.getIdentificador());
 
         if (estructuraOptional.isPresent()) {
             Estructura estructuraExistente = estructuraOptional.get();
@@ -39,8 +40,7 @@ public final class EstructuraService {
 
             repository.save(estructuraExistente);
         } else {
-
-            throw AuthorizationServiceException.create(UtilMessagesService.ServiceEstructura.ESTRUCTURA_NO_ENCONTRADA_IDENTIFICADOR + identificador);
+            throw AuthorizationServiceException.create(UtilMessagesService.ServiceEstructura.ESTRUCTURA_NO_ENCONTRADA_IDENTIFICADOR + nuevaEstructuraNombre.getIdentificador());
         }
     }
 
@@ -60,6 +60,9 @@ public final class EstructuraService {
 
     public List<Estructura> consultar() {
         return repository.findAll();
+    }
+    public Estructura consultarId(Estructura estructura) {
+        return repository.findById(estructura.getIdentificador()).orElse(Estructura.create());
     }
 
     public void eliminar(Estructura estructura) {

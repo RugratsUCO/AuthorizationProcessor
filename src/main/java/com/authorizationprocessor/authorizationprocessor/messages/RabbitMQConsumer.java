@@ -15,7 +15,7 @@ public class RabbitMQConsumer {
     @Autowired
     private EstructuraService service;
     @RabbitListener(queues = "crear_estructura_queue")
-    public void consumeCreate(Estructura estructura){
+    public void crearNueva(Estructura estructura){
         try{
             service.crearNueva(estructura);
         }catch (Exception e){
@@ -23,33 +23,43 @@ public class RabbitMQConsumer {
         }
     }
     @RabbitListener(queues = "consultar_estructura_queue")
-    public List<Estructura> consume(){
-        List<Estructura> estructuras = new ArrayList<>();
+    public Estructura consultarPorId(Estructura estructura){
+        Estructura estructuraConsultar = Estructura.create();
         try{
-            estructuras = service.consultar();
+            estructuraConsultar = service.consultarId(estructura);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-        return estructuras;
+        return estructuraConsultar;
     }
-    @RabbitListener(queues = "editar_estructura_queue")
-    public void consumeChangeStatus(UUID identificador){
+    @RabbitListener(queues = "consultar_estructuras_queue")
+    public List<Estructura> consultarTodas(Estructura estructura){
+        List<Estructura> estructurasConsultar = new ArrayList<>();
+        try{
+            estructurasConsultar = service.consultar();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return estructurasConsultar;
+    }
+    @RabbitListener(queues = "cambiar_estado_queue")
+    public void cambiarEstado(UUID identificador){
         try{
             service.cambiarEstado(identificador);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
-    @RabbitListener(queues = "editar_estructura_queue")
-    public void consumeChangeName(UUID identificador, Estructura estructura){
+    @RabbitListener(queues = "cambiar_nombre_queue")
+    public void cambiarNombre(Estructura estructura){
         try{
-            service.cambiarNombre(identificador, estructura);
+            service.cambiarNombre(estructura);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
     @RabbitListener(queues = "eliminar_estructura_queue")
-    public void consumeDelete(Estructura estructura){
+    public void eliminar(Estructura estructura){
         try{
             service.eliminar(estructura);
         }catch (Exception e){
