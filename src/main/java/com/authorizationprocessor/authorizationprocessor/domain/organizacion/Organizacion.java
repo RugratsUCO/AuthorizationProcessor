@@ -12,7 +12,6 @@ import java.util.UUID;
 @Table(name = "Organizacion")
 public final class Organizacion {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "identificador",nullable = false)
     private UUID identificador;
 

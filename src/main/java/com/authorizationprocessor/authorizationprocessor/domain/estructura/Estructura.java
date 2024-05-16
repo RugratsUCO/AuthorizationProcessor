@@ -12,7 +12,7 @@ import java.util.UUID;
 @Table(name = "Estructura")
 public final class Estructura {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    //@GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "identificador", nullable = false)
     private UUID identificador;
 

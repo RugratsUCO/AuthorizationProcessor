@@ -15,9 +15,9 @@ public class RabbitMQConsumer {
     @Autowired
     private EstructuraService service;
     @RabbitListener(queues = "crear_estructura_queue")
-    public void crearNueva(Estructura estructura){
+    public void crearNueva(List<Estructura> estructuras){
         try{
-            service.crearNueva(estructura);
+            service.crearNueva(estructuras);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
