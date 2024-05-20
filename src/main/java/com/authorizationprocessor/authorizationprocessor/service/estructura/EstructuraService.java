@@ -20,9 +20,23 @@ public final class EstructuraService {
     @Autowired
     private EstructuraRepository repository;
     public void crearNueva(List<Estructura> estructuras) {
-
         repository.saveAll(estructuras);
     }
+
+    /*
+    public void crearNueva(Estructura estructura) {
+        UUID identificador;
+        Optional<Estructura> estructuraOptional;
+        do {
+            identificador = UtilUUID.generateNewUUID();
+            estructuraOptional = repository.findById(identificador);
+        } while (estructuraOptional.isPresent());
+        estructura.setIdentificador(identificador);
+
+        repository.save(estructura);
+    }
+    // GENERALIZAR EN UtilUUID PARA GENERAR EL UUID
+    */
 
     public void cambiarNombre(Estructura nuevaEstructuraNombre) {
         Optional<Estructura> estructuraOptional = repository.findById(nuevaEstructuraNombre.getIdentificador());
