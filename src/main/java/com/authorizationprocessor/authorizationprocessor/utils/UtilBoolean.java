@@ -21,9 +21,11 @@ public class UtilBoolean {
         return DEFAULT_BOOLEAN_STRING;
     }
 
+    /*
     public static final Boolean getDefault(Boolean bool) {
-        return !UtilObject.isNull(bool) && bool ? getDefaultValue() : bool;
+        return !UtilObject.isNull(bool) && bool ? bool : getDefaultValue();
     }
+    */
 
     public static final Boolean getTrue() {
         return TRUE_BOOLEAN;

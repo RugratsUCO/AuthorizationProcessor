@@ -46,12 +46,13 @@ public final class Estructura {
             @JsonProperty("activo") boolean activo,
             @JsonProperty("tienePadre") boolean tienePadre) {
 
-        this.identificador = identificador;
-        this.organizacion = organizacion;
-        this.estructuraPadre = estructuraPadre;
-        this.nombre = nombre;
-        this.activo = activo;
-        this.tienePadre = tienePadre;
+        setIdentificador(identificador);
+        setOrganizacion(organizacion);
+        setTienePadre(tienePadre);
+        setEstructuraPadre(estructuraPadre);
+        setNombre(nombre);
+        setActivo(activo);
+        setTienePadre(tienePadre);
     }
 
     public Estructura() {
@@ -69,12 +70,12 @@ public final class Estructura {
     }
 
     public Estructura setTienePadre(boolean tienePadre) {
-        this.tienePadre = tienePadre;
+        this.tienePadre = UtilBoolean.isNull(tienePadre);
         return this;
     }
 
     public Estructura setIdentificador(final UUID identificador) {
-        this.identificador = identificador;
+        this.identificador = UtilUUID.getDefault(identificador);
         return this;
     }
 
@@ -88,7 +89,7 @@ public final class Estructura {
             this.estructuraPadre = UtilObject.getDefault(estructuraPadre, Estructura.create());
             return this;
         } else {
-            this.estructuraPadre = PADRE;
+            this.estructuraPadre = null;
         }
         return this;
     }

@@ -51,19 +51,19 @@ public final class EstructuraService {
         }
     }
 
-    public void cambiarEstado(UUID identificador) {
-        Optional<Estructura> estructuraOptional = repository.findById(identificador);
+        public void cambiarEstado(UUID identificador) {
+            Optional<Estructura> estructuraOptional = repository.findById(identificador);
 
-        if (estructuraOptional.isPresent()) {
-            Estructura estructuraExistente = estructuraOptional.get();
-            estructuraExistente.setActivo(UtilBoolean.getOpposite(estructuraExistente.getActivo()));
+            if (estructuraOptional.isPresent()) {
+                Estructura estructuraExistente = estructuraOptional.get();
+                estructuraExistente.setActivo(UtilBoolean.getOpposite(estructuraExistente.getActivo()));
 
-            repository.save(estructuraExistente);
-        } else {
+                repository.save(estructuraExistente);
+            } else {
 
-            throw AuthorizationServiceException.create(UtilMessagesService.ServiceEstructura.ESTRUCTURA_NO_ENCONTRADA_IDENTIFICADOR + identificador);
+                throw AuthorizationServiceException.create(UtilMessagesService.ServiceEstructura.ESTRUCTURA_NO_ENCONTRADA_IDENTIFICADOR + identificador);
+            }
         }
-    }
 
     public List<Estructura> consultar() {
         return repository.findAll();
