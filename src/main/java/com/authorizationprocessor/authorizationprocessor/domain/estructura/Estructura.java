@@ -6,6 +6,8 @@ import com.authorizationprocessor.authorizationprocessor.utils.UtilBoolean;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilObject;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilText;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilUUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.UUID;
 @Entity
@@ -33,21 +35,23 @@ public final class Estructura {
     @Column(name = "\"tienePadre\"", nullable = false)
     private boolean tienePadre;
 
-    private static final String UUID_PADRE = "";
+    private static final Estructura PADRE = null;
 
-    private static final Estructura PADRE = new Estructura(UtilUUID.generateUUIDFromString(UUID_PADRE),
-            Organizacion.create(), null, UtilText.getDefaultValue(), UtilBoolean.getDefaultValue(),
-            UtilBoolean.getDefaultValue());
+    @JsonCreator
+    public Estructura(
+            @JsonProperty("identificador") UUID identificador,
+            @JsonProperty("organizacion") Organizacion organizacion,
+            @JsonProperty("estructuraPadre") Estructura estructuraPadre,
+            @JsonProperty("nombre") String nombre,
+            @JsonProperty("activo") boolean activo,
+            @JsonProperty("tienePadre") boolean tienePadre) {
 
-    public Estructura(final UUID identificador, final Organizacion organizacion,
-                      final Estructura estructuraPadre, final String nombre, final boolean estaActivo,
-                      boolean tienePadre) {
-        super();
         setIdentificador(identificador);
         setOrganizacion(organizacion);
+        setTienePadre(tienePadre);
         setEstructuraPadre(estructuraPadre);
         setNombre(nombre);
-        setActivo(estaActivo);
+        setActivo(activo);
         setTienePadre(tienePadre);
     }
 
@@ -55,10 +59,10 @@ public final class Estructura {
         super();
         setIdentificador(UtilUUID.getDefaultValue());
         setOrganizacion(Organizacion.create());
+        setTienePadre(UtilBoolean.getDefaultValue());
         setEstructuraPadre(PADRE);
         setNombre(UtilText.getDefaultValue());
         setActivo(UtilBoolean.getDefaultValue());
-        setTienePadre(UtilBoolean.getDefaultValue());
     }
 
     public final boolean isTienePadre() {
@@ -66,7 +70,7 @@ public final class Estructura {
     }
 
     public Estructura setTienePadre(boolean tienePadre) {
-        this.tienePadre = UtilBoolean.getDefault(tienePadre);
+        this.tienePadre = UtilBoolean.isNull(tienePadre);
         return this;
     }
 
@@ -83,11 +87,13 @@ public final class Estructura {
     public Estructura setEstructuraPadre(final Estructura estructuraPadre) {
         if (isTienePadre()) {
             this.estructuraPadre = UtilObject.getDefault(estructuraPadre, Estructura.create());
+            return this;
         } else {
-            this.estructuraPadre = PADRE;
+            this.estructuraPadre = null;
         }
         return this;
     }
+
 
     public Estructura setNombre(final String nombre) {
         this.nombre = UtilText.applyTrim(nombre);

@@ -21,6 +21,21 @@ public final class EstructuraService {
         repository.saveAll(estructuras);
     }
 
+    /*
+    public void crearNueva(Estructura estructura) {
+        UUID identificador;
+        Optional<Estructura> estructuraOptional;
+        do {
+            identificador = UtilUUID.generateNewUUID();
+            estructuraOptional = repository.findById(identificador);
+        } while (estructuraOptional.isPresent());
+        estructura.setIdentificador(identificador);
+
+        repository.save(estructura);
+    }
+    // GENERALIZAR EN UtilUUID PARA GENERAR EL UUID
+    */
+
     public void cambiarNombre(Estructura nuevaEstructuraNombre) {
         Optional<Estructura> estructuraOptional = repository.findById(nuevaEstructuraNombre.getIdentificador());
 
@@ -34,19 +49,19 @@ public final class EstructuraService {
         }
     }
 
-    public void cambiarEstado(UUID identificador) {
-        Optional<Estructura> estructuraOptional = repository.findById(identificador);
+        public void cambiarEstado(UUID identificador) {
+            Optional<Estructura> estructuraOptional = repository.findById(identificador);
 
-        if (estructuraOptional.isPresent()) {
-            Estructura estructuraExistente = estructuraOptional.get();
-            estructuraExistente.setActivo(UtilBoolean.getOpposite(estructuraExistente.getActivo()));
+            if (estructuraOptional.isPresent()) {
+                Estructura estructuraExistente = estructuraOptional.get();
+                estructuraExistente.setActivo(UtilBoolean.getOpposite(estructuraExistente.getActivo()));
 
-            repository.save(estructuraExistente);
-        } else {
+                repository.save(estructuraExistente);
+            } else {
 
-            throw AuthorizationServiceException.create(UtilMessagesService.ServiceEstructura.ESTRUCTURA_NO_ENCONTRADA_IDENTIFICADOR + identificador);
+                throw AuthorizationServiceException.create(UtilMessagesService.ServiceEstructura.ESTRUCTURA_NO_ENCONTRADA_IDENTIFICADOR + identificador);
+            }
         }
-    }
 
     public List<Estructura> consultar() {
         return repository.findAll();
