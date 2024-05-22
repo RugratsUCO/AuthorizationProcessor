@@ -3,8 +3,6 @@ package com.authorizationprocessor.authorizationprocessor.service.estructura;
 import com.authorizationprocessor.authorizationprocessor.domain.estructura.Estructura;
 import com.authorizationprocessor.authorizationprocessor.repository.estructura.EstructuraRepository;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilBoolean;
-import com.authorizationprocessor.authorizationprocessor.utils.UtilObject;
-import com.authorizationprocessor.authorizationprocessor.utils.UtilUUID;
 import com.authorizationprocessor.authorizationprocessor.utils.exception.AuthorizationServiceException;
 import com.authorizationprocessor.authorizationprocessor.utils.messages.UtilMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ public final class EstructuraService {
     @Autowired
     private EstructuraRepository repository;
     public void crearNueva(List<Estructura> estructuras) {
-
         repository.saveAll(estructuras);
     }
 
@@ -55,7 +52,7 @@ public final class EstructuraService {
         return repository.findAll();
     }
     public Estructura consultarId(Estructura estructura) {
-        return repository.findById(estructura.getIdentificador()).orElse(Estructura.create());
+        return repository.findById(estructura.getIdentificador()).orElse(null);
     }
 
     public void eliminar(Estructura estructura) {
