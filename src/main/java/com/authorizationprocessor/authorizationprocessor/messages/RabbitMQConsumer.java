@@ -1,12 +1,12 @@
 package com.authorizationprocessor.authorizationprocessor.messages;
 
 import com.authorizationprocessor.authorizationprocessor.domain.estructura.Estructura;
+import com.authorizationprocessor.authorizationprocessor.domain.organizacion.Organizacion;
 import com.authorizationprocessor.authorizationprocessor.dto.EstructuraDTO;
 import com.authorizationprocessor.authorizationprocessor.service.estructura.EstructuraService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -16,15 +16,17 @@ import java.util.UUID;
 
 @Component
 public class RabbitMQConsumer {
-    @Autowired
-    private EstructuraService service;
+    private final EstructuraService service;
     private final Logger log = LoggerFactory.getLogger(RabbitMQConsumer.class);
+    public RabbitMQConsumer(EstructuraService service){
+        this.service = service;
+    }
 
     @RabbitListener(queues = "crear_estructura_queue")
     public HttpStatus crearNueva(List<Estructura> estructuras){
         try{
             service.crearNueva(estructuras);
-            return HttpStatus.ACCEPTED;
+            return HttpStatus.OK;
         }catch (Exception e){
             log.error(e.getMessage());
             return HttpStatus.CONFLICT;
@@ -46,6 +48,15 @@ public class RabbitMQConsumer {
             return EstructuraDTO.builder().estructura(estructura).estado(HttpStatus.BAD_REQUEST).build();
         }
     }
+    @RabbitListener(queues = "consultar_estructuras_organizacion_queue")
+    public List<Estructura> consultarPorOrganizacion(Organizacion organizacion){
+        try{
+            return service.consultarPorOrganizacion(organizacion);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return null;
+    }
 
     @RabbitListener(queues = "consultar_estructuras_queue")
     public List<Estructura> consultarTodas(Estructura estructura){
@@ -61,7 +72,7 @@ public class RabbitMQConsumer {
     public HttpStatus cambiarEstado(UUID identificador){
         try{
             service.cambiarEstado(identificador);
-            return HttpStatus.ACCEPTED;
+            return HttpStatus.OK;
         }catch (Exception e){
             log.error(e.getMessage());
             return HttpStatus.INTERNAL_SERVER_ERROR;
@@ -71,7 +82,7 @@ public class RabbitMQConsumer {
     public HttpStatus cambiarNombre(Estructura estructura){
         try{
             service.cambiarNombre(estructura);
-            return HttpStatus.ACCEPTED;
+            return HttpStatus.OK;
         }catch (Exception e){
             log.error(e.getMessage());
             return HttpStatus.CONFLICT;
@@ -81,7 +92,7 @@ public class RabbitMQConsumer {
     public HttpStatus eliminar(Estructura estructura){
         try{
             service.eliminar(estructura);
-            return HttpStatus.ACCEPTED;
+            return HttpStatus.OK;
         }catch (Exception e){
             log.error(e.getMessage());
             return HttpStatus.CONFLICT;

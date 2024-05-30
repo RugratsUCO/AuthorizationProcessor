@@ -1,11 +1,11 @@
 package com.authorizationprocessor.authorizationprocessor.service.estructura;
 
 import com.authorizationprocessor.authorizationprocessor.domain.estructura.Estructura;
+import com.authorizationprocessor.authorizationprocessor.domain.organizacion.Organizacion;
 import com.authorizationprocessor.authorizationprocessor.repository.estructura.EstructuraRepository;
 import com.authorizationprocessor.authorizationprocessor.utils.UtilBoolean;
 import com.authorizationprocessor.authorizationprocessor.utils.exception.AuthorizationServiceException;
 import com.authorizationprocessor.authorizationprocessor.utils.messages.UtilMessagesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,27 +15,14 @@ import java.util.UUID;
 @Service
 public final class EstructuraService {
 
-    @Autowired
-    private EstructuraRepository repository;
+    private final EstructuraRepository repository;
     public void crearNueva(List<Estructura> estructuras) {
         repository.saveAll(estructuras);
     }
 
-    /*
-    public void crearNueva(Estructura estructura) {
-        UUID identificador;
-        Optional<Estructura> estructuraOptional;
-        do {
-            identificador = UtilUUID.generateNewUUID();
-            estructuraOptional = repository.findById(identificador);
-        } while (estructuraOptional.isPresent());
-        estructura.setIdentificador(identificador);
-
-        repository.save(estructura);
+    public EstructuraService(EstructuraRepository repository){
+        this.repository = repository;
     }
-    // GENERALIZAR EN UtilUUID PARA GENERAR EL UUID
-    */
-
     public void cambiarNombre(Estructura nuevaEstructuraNombre) {
         Optional<Estructura> estructuraOptional = repository.findById(nuevaEstructuraNombre.getIdentificador());
 
@@ -69,7 +56,9 @@ public final class EstructuraService {
     public Estructura consultarId(Estructura estructura) {
         return repository.findById(estructura.getIdentificador()).orElse(null);
     }
-
+    public List<Estructura> consultarPorOrganizacion(Organizacion organizacion) {
+        return repository.findAllByOrganizacion(organizacion);
+    }
     public void eliminar(Estructura estructura) {
         Optional<Estructura> estructuraOptional = repository.findById(estructura.getIdentificador());
 
